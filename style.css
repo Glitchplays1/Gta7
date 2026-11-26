@@ -358,3 +358,32 @@ body {
 .weapon-label small{display:block;margin-top:4px;color:#cbd5e1;font:10px system-ui}
 #interaction-hint{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:350;padding:10px 16px;border-radius:8px;background:rgba(8,15,25,.78);border:1px solid rgba(103,232,249,.5);color:white;font:13px system-ui;display:none;white-space:nowrap}
 @media(max-width:600px){#game-economy{right:12px;top:90px;transform:scale(.8);transform-origin:top right}#interaction-hint{font-size:11px;max-width:90vw;white-space:normal;text-align:center}}
+
+
+/* Police alert / wanted stars */
+#wanted-panel {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 360;
+    margin-top: 0;
+    transform: translateY(112px);
+    text-align: right;
+    font-family: Impact, 'Segoe UI', sans-serif;
+    text-shadow: 2px 2px #000;
+    pointer-events: none;
+}
+#wanted-stars {
+    color: #facc15;
+    font-size: 30px;
+    letter-spacing: 3px;
+    -webkit-text-stroke: 1px #78350f;
+}
+#wanted-status {
+    color: #f8fafc;
+    font: 700 11px system-ui, sans-serif;
+    letter-spacing: 2px;
+}
+@media (max-width: 600px) {
+    #wanted-panel { right: 12px; top: 12px; transform: translateY(105px) scale(.85); transform-origin: top right; }
+}
