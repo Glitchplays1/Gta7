@@ -363,11 +363,11 @@ body {
 /* Police alert / wanted stars */
 #wanted-panel {
     position: fixed;
-    top: 24px;
-    right: 24px;
+    top: 18px;
+    left: 50%;
     z-index: 360;
     margin-top: 0;
-    transform: translateY(112px);
+    transform: translateX(-50%);
     text-align: right;
     font-family: Impact, 'Segoe UI', sans-serif;
     text-shadow: 2px 2px #000;
@@ -385,5 +385,5 @@ body {
     letter-spacing: 2px;
 }
 @media (max-width: 600px) {
-    #wanted-panel { right: 12px; top: 12px; transform: translateY(105px) scale(.85); transform-origin: top right; }
+    #wanted-panel { top: 8px; transform: translateX(-50%) scale(.8); transform-origin: top center; }
 }
