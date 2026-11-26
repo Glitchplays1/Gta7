@@ -43,9 +43,7 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
         const blue = new THREE.Mesh(new THREE.BoxGeometry(.48, .18, .32), new THREE.MeshBasicMaterial({color:0x3b82f6}));
         red.position.set(-.3, 1.82, -.15); blue.position.set(.3, 1.82, -.15);
         car.add(red, blue);
-        const beacon = new THREE.Group(); beacon.add(red, blue);
         car.userData.lights = [red, blue];
-        car.userData.beacon = beacon;
         scene.add(car);
         return car;
     }
