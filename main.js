@@ -3,6 +3,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { ProceduralWorld } from './world.js';
+import { createPoliceSystem } from './police.js';
 import { WORLD_CONFIG, verticalStep } from './world-data.js';
 import { initNetwork, broadcastState, updateRemotePlayers, checkPlayerCollision, toggleMic } from './network.js';
 
@@ -102,6 +103,13 @@ for (let i=0;i<8;i++) {
     const x = Math.cos(angle)*radius, z = Math.sin(angle)*radius;
     if (terrain.canOccupy(x,z,terrain.getWalkableHeight(x,z))) createNPC(npcNames[i],x,z,i);
 }
+
+const policeSystem = createPoliceSystem({
+    THREE, scene, terrain,
+    getPlayer: () => character ? character.position : null,
+    starsElement: document.getElementById('wanted-stars'),
+    statusElement: document.getElementById('wanted-status')
+});
 
 const targets = [];
 for (let i=0;i<7;i++) {
@@ -618,7 +626,19 @@ function animate() {
         const shot=pulseShots[i]; shot.life-=delta;
         shot.mesh.position.addScaledVector(shot.direction,32*delta);
         let hit=false;
-        for(const target of targets) {
+        for (const npc of npcs) {
+            if (shot.mesh.position.distanceTo(npc.group.position.clone().add(new THREE.Vector3(0, 1, 0))) < 1.0) {
+                hit = true;
+                policeSystem.raiseWanted(1);
+                npc.phase += Math.PI;
+                interactionHint.textContent = 'A town resident reported the incident! Police alerted.';
+                interactionHint.style.display = 'block';
+                clearTimeout(interactionHint._timer);
+                interactionHint._timer = setTimeout(() => interactionHint.style.display = 'none', 2400);
+                break;
+            }
+        }
+        if (!hit) for(const target of targets) {
             if(target.mesh.visible && shot.mesh.position.distanceTo(target.mesh.position)<.9) {
                 target.mesh.visible=false; hit=true; setCash(cash+25);
                 interactionHint.textContent='Practice target tagged! +$25';
@@ -633,6 +653,8 @@ function animate() {
             scene.remove(shot.mesh); shot.mesh.geometry.dispose(); shot.mesh.material.dispose(); pulseShots.splice(i,1);
         }
     }
+    policeSystem.update(delta, clock.elapsedTime);
+
     for(const target of targets) if(target.mesh.visible) {
         target.mesh.position.y=target.home.y+Math.sin(clock.elapsedTime*1.8+target.phase)*.25;
         target.mesh.rotation.y+=delta;
