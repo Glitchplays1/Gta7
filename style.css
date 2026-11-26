@@ -1,0 +1,360 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #1a1a1a;
+}
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    z-index: 1000;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loader-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 36px 48px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 340px;
+    text-align: center;
+}
+
+.loader-title {
+    margin: 0 0 16px 0;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#loader-text {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+    min-height: 20px;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #06b6d4, #3b82f6, #6366f1);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+}
+
+#loader-percentage {
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+#minimap {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 220px;
+    height: 220px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.3);
+    z-index: 200;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+#minimap-hint {
+    position: absolute;
+    top: 238px;
+    left: 12px;
+    color: rgba(255,255,255,0.6);
+    font-family: sans-serif;
+    font-size: 11px;
+    z-index: 200;
+    pointer-events: none;
+}
+
+#instructions {
+    position: absolute;
+    bottom: 50px;
+    left: 12px;
+    color: white;
+    font-family: sans-serif;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 12px;
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* HUD Styles (GTA Style) */
+#hud-panel {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    font-family: 'Impact', 'Segoe UI Black', system-ui, sans-serif;
+}
+
+#player-name-display {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    -webkit-text-stroke: 1px black;
+    text-shadow: 2px 2px 0 #000;
+    margin-right: 4px;
+}
+
+.hud-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 160px;
+}
+
+.bar-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(0, 0, 0, 0.9);
+}
+
+.health-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: #4ade80;
+}
+
+.armor-bar-fill {
+    width: 50%;
+    height: 100%;
+    background: #38bdf8;
+}
+
+#instructions { bottom: 62px; }
+#minimap { width: 280px; height: 250px; }
+#minimap-hint { top: 270px; }
+@media (max-width: 600px) {
+ #minimap { width: 175px; height: 180px; }
+ #minimap-hint { top: 200px; }
+ #hud-panel { right: 12px; top: 12px; transform: scale(0.8); transform-origin: top right; }
+}
+
+#minimap { width: 240px; height: 240px; }
+#minimap-hint { top: 262px; }
+@media (max-width: 600px) { #minimap { width: 160px; height: 160px; } #minimap-hint { top: 182px; } }
+
+/* Modal Styles */
+#name-modal, #vehicle-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(135, 161, 191, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    color: white;
+    transition: opacity 0.4s ease;
+}
+
+.name-card {
+    background: #5c6773;
+    border: 6px solid #323841;
+    padding: 36px 32px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.15), 0 16px 24px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.name-card h2 {
+    margin: 0 0 24px 0;
+    font-size: 20px;
+    color: #fff;
+    text-shadow: 3px 3px 0 #000;
+    line-height: 1.5;
+}
+
+.name-card p {
+    color: #e2e8f0;
+    margin-bottom: 36px;
+    font-size: 10px;
+    text-shadow: 2px 2px 0 #000;
+    line-height: 1.6;
+}
+
+#player-name-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    background: #4f5965;
+    border: 4px solid #2b3339;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Press Start 2P', monospace;
+    margin-bottom: 30px;
+    outline: none;
+    text-align: center;
+    box-shadow: inset 0 6px 0 rgba(0, 0, 0, 0.2), inset 0 -4px 0 rgba(255, 255, 255, 0.05);
+}
+
+#player-name-input::placeholder {
+    color: #94a3b8;
+}
+
+#player-name-input:focus {
+    border-color: #f2780c;
+    background: #414a54;
+}
+
+#join-btn {
+    width: 100%;
+    padding: 24px;
+    background: #f2780c;
+    border: 4px solid #7c2d12;
+    border-radius: 16px;
+    color: white;
+    font-size: 20px;
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    box-shadow: inset 0 8px 0 #fabb2e, inset 0 -8px 0 #c74a00, 0 8px 0 #1e293b;
+    text-shadow: 2px 2px 0 #000;
+    text-transform: uppercase;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+#join-btn:hover {
+    background: #f98216;
+}
+
+#join-btn:active, #close-vehicle-btn:active {
+    transform: translateY(8px);
+    box-shadow: inset 0 4px 0 #fabb2e, inset 0 -4px 0 #c74a00, 0 0px 0 #1e293b;
+}
+
+.vehicle-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.vehicle-btn {
+    padding: 16px;
+    background: #4f5965;
+    border: 4px solid #2b3339;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    box-shadow: inset 0 6px 0 rgba(0, 0, 0, 0.2), inset 0 -4px 0 rgba(255, 255, 255, 0.05);
+    transition: background 0.1s;
+}
+
+.vehicle-btn:hover {
+    background: #5c6773;
+    border-color: #f2780c;
+}
+
+#close-vehicle-btn {
+    width: 100%;
+    padding: 16px;
+    background: #e11d48;
+    border: 4px solid #881337;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    box-shadow: inset 0 6px 0 #fb7185, inset 0 -6px 0 #be123c, 0 6px 0 #1e293b;
+    text-transform: uppercase;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+#close-vehicle-btn:hover {
+    background: #f43f5e;
+}
+
+#close-vehicle-btn:active {
+    transform: translateY(6px);
+    box-shadow: inset 0 3px 0 #fb7185, inset 0 -3px 0 #be123c, 0 0px 0 #1e293b;
+}
+
+/* Mic Toggle */
+#mic-toggle {
+    margin-top: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.5);
+    color: #4ade80;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+#mic-toggle:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+#mic-toggle.muted {
+    color: #f87171;
+    border-color: rgba(248, 113, 113, 0.5);
+    background: rgba(127, 29, 29, 0.4);
+}
+
+/* GTA 7 prototype: cash, NPC interaction and arcade pulse launcher */
+#game-economy{position:fixed;right:24px;top:120px;z-index:350;text-align:right;color:#fff;font-family:Impact,'Segoe UI',sans-serif;text-shadow:2px 2px #000}
+.cash-label{font-size:27px;letter-spacing:1px;color:#8cff9a}
+#cash-value{margin-left:10px;color:#fff}
+.weapon-label{margin-top:8px;font-size:15px;color:#dbeafe}
+.weapon-label span{color:#67e8f9}
+.weapon-label small{display:block;margin-top:4px;color:#cbd5e1;font:10px system-ui}
+#interaction-hint{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:350;padding:10px 16px;border-radius:8px;background:rgba(8,15,25,.78);border:1px solid rgba(103,232,249,.5);color:white;font:13px system-ui;display:none;white-space:nowrap}
+@media(max-width:600px){#game-economy{right:12px;top:90px;transform:scale(.8);transform-origin:top right}#interaction-hint{font-size:11px;max-width:90vw;white-space:normal;text-align:center}}
