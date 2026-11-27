@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { ProceduralWorld } from './world.js';
 import { createPoliceSystem } from './police.js';
+import { createMissionSystem } from './missions.js';
 import { WORLD_CONFIG, verticalStep } from './world-data.js';
 import { initNetwork, broadcastState, updateRemotePlayers, checkPlayerCollision, toggleMic } from './network.js';
 
@@ -109,6 +110,14 @@ const policeSystem = createPoliceSystem({
     getPlayer: () => character ? character.position : null,
     starsElement: document.getElementById('wanted-stars'),
     statusElement: document.getElementById('wanted-status')
+});
+
+const missionSystem = createMissionSystem({
+    THREE, scene, terrain,
+    getPlayer: () => character ? character.position : null,
+    getVehicle: () => currentVehicle,
+    addCash: amount => setCash(cash + amount),
+    hint: interactionHint
 });
 
 const targets = [];
@@ -654,6 +663,7 @@ function animate() {
         }
     }
     policeSystem.update(delta, clock.elapsedTime);
+    missionSystem.update(delta, clock.elapsedTime);
 
     for(const target of targets) if(target.mesh.visible) {
         target.mesh.position.y=target.home.y+Math.sin(clock.elapsedTime*1.8+target.phase)*.25;
