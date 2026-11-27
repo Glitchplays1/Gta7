@@ -43,6 +43,22 @@
         <div class="cash-label">CASH <span id="cash-value">$500</span></div>
         <div class="weapon-label">EQUIPPED: <span>NEON PULSE</span> <small>LEFT CLICK</small></div>
     </div>
+    <div id="job-board">
+        <div class="job-card">
+            <h2>City Jobs</h2>
+            <p>Choose a job. Reach each glowing checkpoint on foot or in a vehicle.</p>
+            <button data-mission="0">Neon Data Run · $600</button>
+            <button data-mission="1">Harbor Express · $750</button>
+            <button data-mission="2">Skyline Circuit · $900</button>
+            <p class="job-close">Press J to close</p>
+        </div>
+    </div>
+    <div id="mission-panel">
+        <div class="mission-kicker">ACTIVE JOB</div>
+        <strong id="mission-title">Mission</strong>
+        <div id="mission-detail"></div>
+        <div id="mission-progress"></div>
+    </div>
     <div id="interaction-hint">Walk up to a person and press <b>F</b> to talk</div>
     <div id="loader">
         <div class="loader-card">
@@ -56,7 +72,7 @@
     </div>
     <canvas id="minimap" aria-label="World map and player position"></canvas>
     <div id="minimap-hint">N ↑ · Town square &amp; woodland</div>
-    <div id="instructions">WASD move &bull; Shift run &bull; Space jump &bull; F talk &bull; Left click pulse &bull; V vehicles</div>
+    <div id="instructions">WASD move &bull; Shift run &bull; Space jump &bull; F talk &bull; J jobs &bull; Left click pulse &bull; V vehicles</div>
     
     <div id="vehicle-modal" style="display: none; opacity: 0;">
         <div class="name-card">
