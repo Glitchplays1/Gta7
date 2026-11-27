@@ -5,6 +5,7 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { ProceduralWorld } from './world.js';
 import { createPoliceSystem } from './police.js';
 import { createMissionSystem } from './missions.js';
+import { createTrafficSystem } from './traffic.js';
 import { WORLD_CONFIG, verticalStep } from './world-data.js';
 import { initNetwork, broadcastState, updateRemotePlayers, checkPlayerCollision, toggleMic } from './network.js';
 
@@ -119,6 +120,8 @@ const missionSystem = createMissionSystem({
     addCash: amount => setCash(cash + amount),
     hint: interactionHint
 });
+
+const trafficSystem = createTrafficSystem({ THREE, scene, terrain });
 
 const targets = [];
 for (let i=0;i<7;i++) {
@@ -664,6 +667,7 @@ function animate() {
     }
     policeSystem.update(delta, clock.elapsedTime);
     missionSystem.update(delta, clock.elapsedTime);
+    trafficSystem.update(delta);
 
     for(const target of targets) if(target.mesh.visible) {
         target.mesh.position.y=target.home.y+Math.sin(clock.elapsedTime*1.8+target.phase)*.25;
