@@ -387,3 +387,47 @@ body {
 @media (max-width: 600px) {
     #wanted-panel { top: 8px; transform: translateX(-50%) scale(.8); transform-origin: top center; }
 }
+
+
+/* Mission board and active-job HUD */
+#job-board {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2100;
+    background: rgba(2, 6, 23, .78);
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+#job-board[style*="block"] { display: flex !important; }
+.job-card {
+    width: min(430px, calc(100vw - 32px));
+    box-sizing: border-box;
+    padding: 26px;
+    border-radius: 16px;
+    color: #f8fafc;
+    background: linear-gradient(145deg, #172554, #0f172a);
+    border: 1px solid rgba(103,232,249,.55);
+    box-shadow: 0 18px 60px rgba(0,0,0,.55);
+}
+.job-card h2 { margin: 0 0 12px; color: #67e8f9; letter-spacing: 1px; }
+.job-card p { color: #cbd5e1; line-height: 1.5; font-size: 14px; }
+.job-card button {
+    display: block; width: 100%; margin: 10px 0; padding: 14px;
+    border: 1px solid #0891b2; border-radius: 9px; color: white;
+    background: #164e63; font-weight: 700; cursor: pointer;
+}
+.job-card button:hover { background: #0e7490; }
+.job-card .job-close { margin-bottom: 0; text-align: center; font-size: 12px; }
+#mission-panel {
+    display: none; position: fixed; left: 50%; top: 72px; transform: translateX(-50%);
+    z-index: 350; width: min(360px, calc(100vw - 28px)); box-sizing: border-box;
+    padding: 12px 16px; border-radius: 10px; color: #f8fafc;
+    background: rgba(8, 15, 35, .88); border: 1px solid rgba(34,211,238,.65);
+    font: 13px system-ui, sans-serif; text-align: center; pointer-events: none;
+}
+#mission-panel .mission-kicker { color: #67e8f9; font-size: 10px; letter-spacing: 2px; font-weight: 800; }
+#mission-title { display: block; margin: 3px 0; font-size: 16px; }
+#mission-detail { color: #cbd5e1; }
+#mission-progress { margin-top: 7px; color: #facc15; font-weight: 800; letter-spacing: 1px; }
