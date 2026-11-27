@@ -27,7 +27,7 @@
     </script>
 </head>
 <body>
-    <button id="install-app-button" type="button" style="display:none;position:fixed;z-index:10000;top:12px;right:12px;padding:12px 16px;border:1px solid #c084fc;border-radius:12px;background:#21102f;color:white;font-weight:800;box-shadow:0 4px 18px #0008;">＋ Add GTA 7 to Home Screen</button>
+    <button id="install-app-button" type="button" style="display:block;position:fixed;z-index:10000;top:12px;right:12px;padding:12px 16px;border:1px solid #c084fc;border-radius:12px;background:#21102f;color:white;font-weight:800;box-shadow:0 4px 18px #0008;">＋ Add GTA 7 to Home Screen</button>
     <div id="hud-panel">
         <div id="player-name-display">Player</div>
         <div class="hud-bars">
@@ -126,24 +126,27 @@
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     installPrompt = event;
+    installButton.textContent = '＋ Install GTA 7';
     installButton.style.display = 'block';
   });
   installButton.addEventListener('click', async () => {
-    if (!installPrompt) {
-      alert('To add GTA 7: open your browser menu and choose “Install app” or “Add to Home screen”.');
+    if (installPrompt) {
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null;
       return;
     }
-    installPrompt.prompt();
-    await installPrompt.userChoice;
-    installPrompt = null;
-    installButton.style.display = 'none';
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      alert('To install GTA 7 on iPhone: open this page in Safari, tap Share, then choose “Add to Home Screen”.');
+    } else {
+      alert('To install GTA 7: open the Chrome menu (⋮) and choose “Install page as app” or “Save and share” → “Install page as app”. If that option is missing, reload this page after the latest deployment finishes.');
+    }
   });
   window.addEventListener('appinstalled', () => {
     installButton.style.display = 'none';
     installPrompt = null;
   });
-  // On browsers without an install prompt, keep a manual install guide available.
-  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) installButton.style.display = 'block';
+  // Always show a manual install button; some browsers do not fire beforeinstallprompt.
 })();
 </script>
 </body>
