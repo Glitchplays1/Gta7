@@ -110,7 +110,24 @@ const policeSystem = createPoliceSystem({
     THREE, scene, terrain,
     getPlayer: () => character ? character.position : null,
     starsElement: document.getElementById('wanted-stars'),
-    statusElement: document.getElementById('wanted-status')
+    statusElement: document.getElementById('wanted-status'),
+    onArrest: () => {
+        setCash(cash - 100);
+        if (character) {
+            character.visible = true;
+            const safeY = terrain.getSupportHeight(0, 0, character.position.y);
+            character.position.set(0, safeY + 0.05, 0);
+        }
+        currentVehicle = null;
+        const overlay = document.getElementById('arrest-overlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            clearTimeout(overlay._hideTimer);
+            overlay._hideTimer = setTimeout(() => { overlay.style.display = 'none'; }, 2600);
+        }
+        interactionHint.textContent = 'You were arrested! The police cleared your wanted level.';
+        interactionHint.style.display = 'block';
+    }
 });
 
 const missionSystem = createMissionSystem({
