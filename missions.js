@@ -57,6 +57,7 @@ export function createMissionSystem({ THREE, scene, terrain, getPlayer, getVehic
         const player = getPlayer();
         if (!player) return;
         markers.forEach((marker, i) => {
+            if (!marker) return;
             marker.rotation.z += delta * 1.2;
             marker.position.y = terrain.getSupportHeight(marker.position.x, marker.position.z, marker.position.y) + .3 + Math.sin(elapsed * 2 + i) * .12;
         });
