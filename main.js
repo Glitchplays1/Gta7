@@ -6,6 +6,7 @@ import { ProceduralWorld } from './world.js';
 import { createPoliceSystem } from './police.js';
 import { createMissionSystem } from './missions.js';
 import { createTrafficSystem } from './traffic.js';
+import { createHomeSystem } from './homes.js';
 import { WORLD_CONFIG, verticalStep } from './world-data.js';
 import { initNetwork, broadcastState, updateRemotePlayers, checkPlayerCollision, toggleMic } from './network.js';
 
@@ -139,6 +140,13 @@ const missionSystem = createMissionSystem({
 });
 
 const trafficSystem = createTrafficSystem({ THREE, scene, terrain });
+
+const homeSystem = createHomeSystem({
+    THREE, scene, terrain,
+    getPlayer: () => character ? character : null,
+    getVehicle: () => currentVehicle,
+    hint: interactionHint
+});
 
 const targets = [];
 for (let i=0;i<7;i++) {
@@ -373,6 +381,11 @@ window.addEventListener('keydown', (e) => {
     }
     
     if (key === 'e') {
+        if (homeSystem.isInside()) {
+            homeSystem.exit();
+            return;
+        }
+        if (homeSystem.enter()) return;
         if (currentVehicle) {
             const right = new THREE.Vector3(1, 0, 0).applyQuaternion(currentVehicle.mesh.quaternion);
             character.position.copy(currentVehicle.mesh.position).addScaledVector(right, 4);
@@ -458,7 +471,21 @@ function animate() {
         let movingBackward = false;
         let isRunning = false;
         
-        if (currentVehicle) {
+        if (homeSystem.isInside()) {
+            let move = 0;
+            if (keys.w || keys.ArrowUp) move = 1;
+            if (keys.s || keys.ArrowDown) move = -1;
+            const turn = (keys.a || keys.ArrowLeft ? 1 : 0) - (keys.d || keys.ArrowRight ? 1 : 0);
+            character.rotation.y += turn * rotationSpeed * delta;
+            character.translateZ(move * speed * delta);
+            character.position.x = THREE.MathUtils.clamp(character.position.x, -6.1, 6.1);
+            character.position.z = THREE.MathUtils.clamp(character.position.z, -5.1, 5.1);
+            character.position.y = 250.2;
+            const target = character.position.clone(); target.y += 1.5;
+            const offset = new THREE.Vector3(0, 2.2, -3.5).applyQuaternion(character.quaternion);
+            camera.position.copy(target).add(offset);
+            camera.lookAt(target);
+        } else if (currentVehicle) {
             const vData = currentVehicle;
             const conf = vData.config;
             let accel = 0;
@@ -682,6 +709,7 @@ function animate() {
             scene.remove(shot.mesh); shot.mesh.geometry.dispose(); shot.mesh.material.dispose(); pulseShots.splice(i,1);
         }
     }
+    homeSystem.update();
     policeSystem.update(delta, clock.elapsedTime);
     missionSystem.update(delta, clock.elapsedTime);
     trafficSystem.update(delta);
