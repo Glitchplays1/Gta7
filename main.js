@@ -277,7 +277,7 @@ loader.load('animations/male_character/Idle.fbx', function (fbx) {
 
 // Controls
 let isFlying = false;
-const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false, Shift: false, ' ': false };
+const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false, Shift: false, Control: false, ' ': false };
 
 // Vehicle Data
 export const spawnedVehicles = [];
