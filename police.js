@@ -5,6 +5,7 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
     let spawnTimer = 0;
     const patrolCars = [];
     const maxCars = 5;
+    let roadblock = null;
 
     function renderStars() {
         if (starsElement) {
@@ -62,6 +63,21 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
     function update(delta, elapsed) {
         const player = getPlayer();
         if (!player) return;
+        if (wanted >= 3 && !roadblock) {
+            roadblock = new THREE.Group();
+            const beam = new THREE.Mesh(new THREE.BoxGeometry(8, .35, .45), new THREE.MeshStandardMaterial({color:0xf97316}));
+            beam.position.y = 1.15; roadblock.add(beam);
+            for (const x of [-3.2, 3.2]) {
+                const post = new THREE.Mesh(new THREE.BoxGeometry(.35, 1.2, .35), new THREE.MeshStandardMaterial({color:0xf8fafc}));
+                post.position.set(x, .6, 0); roadblock.add(post);
+            }
+            const bx = player.x + Math.sin(player.x * .03) * 12;
+            const bz = player.z + Math.cos(player.z * .03) * 12;
+            roadblock.position.set(bx, terrain.getSupportHeight(bx,bz,player.y), bz);
+            roadblock.rotation.y = Math.round(player.rotation.y / (Math.PI / 2)) * (Math.PI / 2);
+            scene.add(roadblock);
+        }
+        if (wanted < 3 && roadblock) { scene.remove(roadblock); roadblock = null; }
         if (wanted > 0) {
             calmTimer += delta;
             spawnTimer -= delta;
