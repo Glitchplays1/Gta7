@@ -276,6 +276,7 @@ loader.load('animations/male_character/Idle.fbx', function (fbx) {
 });
 
 // Controls
+let isFlying = false;
 const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowLeft: false, ArrowDown: false, ArrowRight: false, Shift: false, ' ': false };
 
 // Vehicle Data
@@ -367,6 +368,18 @@ window.addEventListener('keydown', (e) => {
         e.preventDefault();
     }
     
+    if (key === 'g' && character && !currentVehicle && !homeSystem.isInside()) {
+        isFlying = !isFlying;
+        verticalVelocity = 0;
+        isJumping = false;
+        interactionHint.textContent = isFlying
+            ? 'FLIGHT MODE ON · WASD move · Space rise · Ctrl descend · G land'
+            : 'FLIGHT MODE OFF';
+        interactionHint.style.display = 'block';
+        clearTimeout(interactionHint._timer);
+        interactionHint._timer = setTimeout(() => { interactionHint.style.display = 'none'; }, 2600);
+    }
+
     if (key === 'v') {
         const modal = document.getElementById('vehicle-modal');
         if (modal.style.display === 'none' || !modal.style.display) {
@@ -559,38 +572,46 @@ function animate() {
             if (keys.a || keys.ArrowLeft) rotateY = 1;
             if (keys.d || keys.ArrowRight) rotateY = -1;
 
-            if (keys[' '] && !jumpHeld && !isJumping) {
-                isJumping = true;
-                verticalVelocity = 7;
-                fadeToAction('jump', 0.1);
-            }
-            jumpHeld = keys[' '];
-
             const currentSpeed = isRunning ? speed * 2 : speed;
             character.rotation.y += rotateY * rotationSpeed * delta;
-            
             const previous = character.position.clone();
-            
-            character.translateZ(moveZ * currentSpeed * delta);
-            
-            let hitVehicle = false;
-            for (const v of spawnedVehicles) {
-                if (Math.hypot(character.position.x - v.mesh.position.x, character.position.z - v.mesh.position.z) < 2.5) {
-                    hitVehicle = true;
-                    break;
-                }
-            }
-            
-            if (!terrain.canOccupy(character.position.x, character.position.z, character.position.y) || 
-                checkPlayerCollision(character.position.x, character.position.z, 0.6) || hitVehicle) {
-                character.position.copy(previous);
-            }
 
-            const support = terrain.getSupportHeight(character.position.x, character.position.z, previous.y);
-            const vertical = verticalStep(previous.y, verticalVelocity, support, delta);
-            character.position.y = vertical.y;
-            verticalVelocity = vertical.velocity;
-            isJumping = !vertical.grounded;
+            if (isFlying) {
+                // Arcade-style flight: ignore terrain collision while airborne.
+                character.translateZ(moveZ * currentSpeed * delta);
+                const verticalInput = (keys[' '] ? 1 : 0) - (keys.Control ? 1 : 0);
+                character.position.y += verticalInput * currentSpeed * delta;
+                character.position.y = THREE.MathUtils.clamp(character.position.y, 1.5, 180);
+                verticalVelocity = 0;
+                isJumping = false;
+            } else {
+                if (keys[' '] && !jumpHeld && !isJumping) {
+                    isJumping = true;
+                    verticalVelocity = 7;
+                    fadeToAction('jump', 0.1);
+                }
+                character.translateZ(moveZ * currentSpeed * delta);
+
+                let hitVehicle = false;
+                for (const v of spawnedVehicles) {
+                    if (Math.hypot(character.position.x - v.mesh.position.x, character.position.z - v.mesh.position.z) < 2.5) {
+                        hitVehicle = true;
+                        break;
+                    }
+                }
+
+                if (!terrain.canOccupy(character.position.x, character.position.z, character.position.y) ||
+                    checkPlayerCollision(character.position.x, character.position.z, 0.6) || hitVehicle) {
+                    character.position.copy(previous);
+                }
+
+                const support = terrain.getSupportHeight(character.position.x, character.position.z, previous.y);
+                const vertical = verticalStep(previous.y, verticalVelocity, support, delta);
+                character.position.y = vertical.y;
+                verticalVelocity = vertical.velocity;
+                isJumping = !vertical.grounded;
+            }
+            jumpHeld = keys[' '];
 
             if (mixer && !isJumping) {
                 if (isRunning) fadeToAction('run', 0.2);
