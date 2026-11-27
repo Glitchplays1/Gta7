@@ -431,3 +431,12 @@ body {
 #mission-title { display: block; margin: 3px 0; font-size: 16px; }
 #mission-detail { color: #cbd5e1; }
 #mission-progress { margin-top: 7px; color: #facc15; font-weight: 800; letter-spacing: 1px; }
+
+
+/* Arrest / busted screen */
+#arrest-overlay { display:none; position:fixed; inset:0; z-index:2500; align-items:center; justify-content:center; background:rgba(5,10,20,.78); font-family:Impact,'Segoe UI',sans-serif; text-align:center; pointer-events:none; }
+.arrest-card { width:min(440px,calc(100vw - 36px)); padding:30px 24px; box-sizing:border-box; color:#fff; background:linear-gradient(145deg,#172554,#111827); border:2px solid #60a5fa; border-radius:14px; box-shadow:0 0 45px rgba(59,130,246,.35); }
+.arrest-label { color:#f87171; font-size:42px; letter-spacing:5px; text-shadow:0 3px #450a0a; }
+.arrest-card h2 { margin:8px 0; font-size:22px; letter-spacing:2px; }
+.arrest-card p { color:#cbd5e1; font:14px/1.5 system-ui,sans-serif; }
+.arrest-card strong { display:block; margin-top:18px; color:#fbbf24; font-size:20px; }
