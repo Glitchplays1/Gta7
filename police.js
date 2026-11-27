@@ -1,11 +1,13 @@
 // Cartoon police patrols and a five-star wanted system for GTA 7.
-export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElement, statusElement }) {
+export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElement, statusElement, onArrest }) {
     let wanted = 0;
     let calmTimer = 0;
     let spawnTimer = 0;
     const patrolCars = [];
     const maxCars = 5;
     let roadblock = null;
+    let arrestProgress = 0;
+    let arrestCooldown = 0;
 
     function renderStars() {
         if (starsElement) {
@@ -78,6 +80,7 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
             scene.add(roadblock);
         }
         if (wanted < 3 && roadblock) { scene.remove(roadblock); roadblock = null; }
+        if (arrestCooldown > 0) arrestCooldown = Math.max(0, arrestCooldown - delta);
         if (wanted > 0) {
             calmTimer += delta;
             spawnTimer -= delta;
@@ -86,11 +89,13 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
                 spawnCar(player);
                 spawnTimer = 2.5;
             }
+            let closestPoliceDistance = Infinity;
             for (const unit of patrolCars) {
                 const car = unit.mesh;
                 const dx = player.x - car.position.x;
                 const dz = player.z - car.position.z;
                 const distance = Math.hypot(dx, dz);
+                closestPoliceDistance = Math.min(closestPoliceDistance, distance);
                 const targetAngle = Math.atan2(dx, dz);
                 let angleDiff = targetAngle - car.rotation.y;
                 angleDiff = Math.atan2(Math.sin(angleDiff), Math.cos(angleDiff));
@@ -112,6 +117,20 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
                 }
             } else {
                 calmTimer = 0;
+            }
+            if (closestPoliceDistance < 3.6 && arrestCooldown <= 0) {
+                arrestProgress += delta;
+                if (arrestProgress >= 1.6) {
+                    arrestProgress = 0;
+                    arrestCooldown = 10;
+                    setWanted(0);
+                    for (const unit of patrolCars) scene.remove(unit.mesh);
+                    patrolCars.length = 0;
+                    if (roadblock) { scene.remove(roadblock); roadblock = null; }
+                    if (typeof onArrest === 'function') onArrest();
+                }
+            } else {
+                arrestProgress = Math.max(0, arrestProgress - delta * 1.5);
             }
             if (wanted === 0) {
                 for (const unit of patrolCars) scene.remove(unit.mesh);
