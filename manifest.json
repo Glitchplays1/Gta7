@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Grand Theft Auto 7 · Las Venturas",
+  "short_name": "GTA 7",
+  "description": "Explore the GTA 7 open-world game.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#080611",
+  "theme_color": "#160b25",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
