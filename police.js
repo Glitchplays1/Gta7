@@ -74,7 +74,7 @@ export function createPoliceSystem({ THREE, scene, terrain, getPlayer, starsElem
             const bx = player.x + Math.sin(player.x * .03) * 12;
             const bz = player.z + Math.cos(player.z * .03) * 12;
             roadblock.position.set(bx, terrain.getSupportHeight(bx,bz,player.y), bz);
-            roadblock.rotation.y = Math.round(player.rotation.y / (Math.PI / 2)) * (Math.PI / 2);
+            roadblock.rotation.y = 0;
             scene.add(roadblock);
         }
         if (wanted < 3 && roadblock) { scene.remove(roadblock); roadblock = null; }
